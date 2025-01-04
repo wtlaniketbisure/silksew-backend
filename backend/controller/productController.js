@@ -65,6 +65,9 @@ const singleproduct = async(req,res)=>{
     try {
         const {id} = req.body;
         const product = await productModel.findById(id);
+        if(!product){
+            return res.json({err:"product is not exist"})
+        }
         console.log(product)
         res.json({success:true,message:product})
 
