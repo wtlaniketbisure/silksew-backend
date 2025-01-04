@@ -1,5 +1,32 @@
+// import React from "react";
+// import '../CSS/LoginSignup.css'
+
+// const LoginSignup = () => {
+//   return (
+//     <div className="loginsignup">
+//       <div className="loginsignup-container">
+//         <h1>Sign Up</h1>
+//         <div className="loginsignup-fie">
+//           <input type="text" placeholder="Your Name" />
+//           <input type="email" placeholder="Email Address" />
+//           <input type="password" placeholder="Password" />
+//         </div>
+//         <button>Continue</button>
+//         <p className="loginsignup-login">
+//           Already have an account? <span>Login here</span>
+//         </p>
+//         <div className="loginsignup-agree">
+//           <input type="checkbox" name="" id="" />
+//           <p>By continuing, I agree to the terms of use & privacy policy.</p>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LoginSignup;
+
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import "../CSS/LoginSignup.css";
 import { useState } from "react";
 import axios from 'axios'
@@ -46,37 +73,6 @@ const LoginSignup = () => {
             <input type="checkbox" />
             <p>By continuing, I agree to the terms of use & privacy policy.</p>
           </div>
-=======
-  const navigate = useNavigate(); // Initialize useNavigate hook
-
-  // Function to handle navigation to the login page
-  const handleLoginClick = () => {
-    navigate("/login"); // Navigate to the login page
-  };
-
-  return (
-    <div className="loginsignup">
-      <div className="loginsignup-container">
-        <h1>Sign Up</h1>
-        <div className="loginsignup-fields">
-          <input type="text" placeholder="Your Name" />
-          <input type="email" placeholder="Email Address" />
-          <input type="password" placeholder="Password" />
-        </div>
-        <button>Continue</button>
-        <p className="loginsignup-login">
-          Already have an account?{" "}
-          <span
-            className="loginsignup-link"
-            onClick={handleLoginClick} // Attach the handler here
-          >
-            Login here
-          </span>
-        </p>
-        <div className="loginsignup-agree">
-          <input type="checkbox" />
-          <p>By continuing, I agree to the terms of use & privacy policy.</p>
->>>>>>> b1802a4e34f56fff5f2118dd7929b69c551dc283
         </div>
       </div>
     </form>
@@ -84,6 +80,3 @@ const LoginSignup = () => {
 };
 
 export default LoginSignup;
-
-
-
