@@ -1,35 +1,15 @@
-// import React from "react";
-// import '../CSS/LoginSignup.css'
-
-// const LoginSignup = () => {
-//   return (
-//     <div className="loginsignup">
-//       <div className="loginsignup-container">
-//         <h1>Sign Up</h1>
-//         <div className="loginsignup-fie">
-//           <input type="text" placeholder="Your Name" />
-//           <input type="email" placeholder="Email Address" />
-//           <input type="password" placeholder="Password" />
-//         </div>
-//         <button>Continue</button>
-//         <p className="loginsignup-login">
-//           Already have an account? <span>Login here</span>
-//         </p>
-//         <div className="loginsignup-agree">
-//           <input type="checkbox" name="" id="" />
-//           <p>By continuing, I agree to the terms of use & privacy policy.</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default LoginSignup;
-
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import "../CSS/LoginSignup.css";
 
 const LoginSignup = () => {
+  const navigate = useNavigate(); // Initialize useNavigate hook
+
+  // Function to handle navigation to the login page
+  const handleLoginClick = () => {
+    navigate("/login"); // Navigate to the login page
+  };
+
   return (
     <div className="loginsignup">
       <div className="loginsignup-container">
@@ -41,7 +21,13 @@ const LoginSignup = () => {
         </div>
         <button>Continue</button>
         <p className="loginsignup-login">
-          Already have an account? <span>Login here</span>
+          Already have an account?{" "}
+          <span
+            className="loginsignup-link"
+            onClick={handleLoginClick} // Attach the handler here
+          >
+            Login here
+          </span>
         </p>
         <div className="loginsignup-agree">
           <input type="checkbox" />
@@ -53,3 +39,6 @@ const LoginSignup = () => {
 };
 
 export default LoginSignup;
+
+
+

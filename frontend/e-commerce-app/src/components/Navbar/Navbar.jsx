@@ -3,10 +3,16 @@ import './Navbar.css'
 import logo from '../Assets/logo.png'
 import cart_icon from '../Assets/cart_icon.png'
 import { Link } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
 
     const [menu,setMenu] = useState("shop")
+    const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate("/signup"); // Navigate to the Sign-Up page
+  };
   return (
     <div className='navbar'>
         <div className='nav-logo'>
@@ -20,7 +26,10 @@ const Navbar = () => {
             <li onClick={()=>{setMenu("kids")}}><Link style={{textDecoration: 'none'}} to='/kids'>Kids</Link> {menu === "kids"?<hr/>:<></>}</li>
         </ul>
         <div className='nav-login-cart'>
-            <Link to='/login'><button>Login</button></Link>
+            {/* <Link to='/login'><button>Login</button></Link> */}
+            <button onClick={handleLoginClick} className="login-btn">
+        Login
+      </button>
             <Link to='/cart'><img src={cart_icon} alt=''/></Link>
             <div className='nav-cart-count'>0</div>
         </div> 
