@@ -31,12 +31,20 @@ import "../CSS/LoginSignup.css";
 import { useState } from "react";
 import axios from 'axios'
 import { BASEURL } from "../config";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
 const LoginSignup = () => {
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const navigate = useNavigate(); // Initialize useNavigate hook
+
+  // Function to handle navigation to the login page
+  const handleLoginClick = () => {
+    navigate("/login"); // Navigate to the login page
+  };
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -67,8 +75,15 @@ const LoginSignup = () => {
           </div>
           <button>Continue</button>
           <p className="loginsignup-login">
-            Already have an account? <span>Login here</span>
+            Already have an account? 
+            <span
+            className="loginsignup-link"
+            onClick={handleLoginClick} // Attach the handler here
+          >
+            Login here
+          </span>
           </p>
+         
           <div className="loginsignup-agree">
             <input type="checkbox" />
             <p>By continuing, I agree to the terms of use & privacy policy.</p>
