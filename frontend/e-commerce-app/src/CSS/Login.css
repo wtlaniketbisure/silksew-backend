@@ -55,37 +55,3 @@
     cursor: pointer;
     transition: background-color 0.3s;
   }
-  
-  .loginsignup-container button:hover {
-    background: #e33c3c;
-  }
-  
-  .loginsignup-login {
-    margin-top: 20px;
-    text-align: center;
-    color: #5c5c5c;
-    font-size: 14px;
-  }
-  
-  .loginsignup-login span {
-    color: #ff4141;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  
-  .loginsignup-agree {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-    color: #5c5c5c;
-    font-size: 14px;
-  }
-
-  .loginsignup-link {
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  
-  
