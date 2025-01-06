@@ -52,12 +52,12 @@
     font-weight: 700;
 }
 
-.productdisplay-right-prices-old{
+.productdisplay-right-price-old{
     color: #818181;
     text-decoration: line-through;
 }
 
-.productdisplay-right-prices-new{
+.productdisplay-right-price-new{
     color: #ff4141;
 }
 
@@ -74,7 +74,7 @@
     gap: 20px;
 }
 
-.productdisplay-right-size div{
+.productdisplay-right-sizes div{
     padding: 18px 24px;
     background: #fbfbfb;
     border: 1px solid #ebebeb;
