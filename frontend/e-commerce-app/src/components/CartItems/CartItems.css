@@ -1,109 +1,177 @@
-.cartitems{
+.cartitems {
     margin: 100px 170px;
 }
 
-.cartitems hr{
-    height: 3px;
-    background: #e2e2e2;
-    border: 0;
-}
-
-.cartitems-format-main{
+.cartitems-header {
     display: grid;
-    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr 1fr;
     align-items: center;
-    gap: 75px;
-    padding: 20px 0px;
+    gap: 20px;
+    padding: 10px 0;
     color: #454545;
     font-size: 18px;
     font-weight: 600;
+    border-bottom: 2px solid #e2e2e2;
 }
 
-.cartitems-format{
-    font-size: 17px;
-    font-weight: 500;
+.cartitems hr {
+    height: 2px;
+    background: #e2e2e2;
+    border: 0;
+    margin: 20px 0;
 }
 
-.carticon-product-icon{
-    height: 62px;
-}
-
-.cartitems-remove-icon{
-    width: 15px;
-    margin: 0px 40px;
-    cursor: pointer;
-}
-
-.cartitems-quantity{
-    width: 64px;
-    height: 50px;
-    border: 2px solid #ebebeb;
-    background: #fff;
-}
-
-.cartitems-down{
-    display: flex;
-    margin: 100px 0px;
-}
-
-.cartitems-total{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    margin-right: 200px;
-    gap: 40px;
-}
-
-.cartitems-total-item{
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 0px;
-}
-
-.cartitems-total button{
-    width: 262px;
-    height: 58px;
-    outline: none;
-    border: none;
-    background: #ff5a5a;
-    color: #fff;
+.cartitem {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid #e2e2e2;
     font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.cartitems-promocode{
-    flex: 1;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.cartitems-promocode p{
     color: #555;
 }
 
-.cartitems-promobox{
-    width: 504px;
-    margin-top: 15px;
-    padding-left: 20px;
-    height: 58px;
-    background: #eaeaea;
+.cartitem img {
+    height: 60px;
+    object-fit: contain;
 }
 
-.cartitems-promobox input{
+.cartitem p {
+    margin: 0;
+    font-weight: 500;
+}
+
+.cartitem button {
+    padding: 8px 12px;
+    background: #ff5a5a;
+    border: none;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.cartitem button:hover {
+    background: #e04a4a;
+}
+
+.cartitems-down {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+    gap: 30px;
+}
+
+.cartitems-total {
+    flex: 1;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cartitems-total h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #e2e2e2;
+    padding-bottom: 10px;
+}
+
+.cartitems-total div {
+    margin-bottom: 20px;
+}
+
+.cartitems-total-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 18px;
+    color: #555;
+}
+
+.cartitems-total-item h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+}
+
+.cartitems-total hr {
+    border: none;
+    border-top: 1px solid #e2e2e2;
+    margin: 10px 0;
+}
+
+.cartitems-total button {
+    width: 100%;
+    padding: 15px;
+    background: #ff5a5a;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.cartitems-total button:hover {
+    background: #e04a4a;
+}
+
+.cartitems-promocode {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cartitems-promocode p {
+    font-size: 18px;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.cartitems-promobox {
+    display: flex;
+    align-items: center;
+    background: #eaeaea;
+    padding: 0 10px;
+    border-radius: 8px;
+}
+
+.cartitems-promobox input {
+    flex: 1;
     border: none;
     outline: none;
     background: transparent;
     font-size: 16px;
-    width: 330px;
     height: 50px;
+    padding: 0 10px;
+    color: #333;
 }
 
-.cartitems-promobox button{
-    width: 170px;
-    height: 58px;
+.cartitems-promobox button {
+    width: 150px;
+    height: 50px;
     font-size: 16px;
-    background: black;
+    background: #000;
     color: white;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.cartitems-promobox button:hover {
+    background: #333;
 }
