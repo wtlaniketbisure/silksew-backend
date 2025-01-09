@@ -50,3 +50,205 @@
     font-size: 22px;
     font-weight: 500;
 }
+
+/* Offer Pop-up Styles */
+.offer-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Darker semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 1s ease-in-out; /* Slower fade-in animation */
+}
+
+/* Pop-up Content */
+.offer-popup-content {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    max-width: 700px;
+    width: 95%;
+    text-align: center;
+    position: relative;
+    font-family: 'Arial', sans-serif;
+    animation: scaleUp 0.5s ease-out; /* Slower scale-up animation */
+}
+
+/* Header */
+.offer-popup-content h3 {
+    margin-bottom: 20px;
+    color: #333333;
+    font-size: 30px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* List Style */
+.offer-popup-content ul {
+    list-style-type: none;
+    padding-left: 0;
+    color: #444444;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.offer-popup-content li {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Icons */
+.offer-popup-content li::before {
+    content: "✓";
+    color: #ff6f61;
+    font-size: 24px;
+}
+
+/* Close Button */
+.offer-popup-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 35px;
+    font-weight: bold;
+    color: #ff6f61;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.offer-popup-close:hover {
+    color: #ff3b30;
+    transform: rotate(45deg);
+}
+
+/* Offer Button */
+.offer-popup-action {
+    background-color: #ff6f61;
+    color: white;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.offer-popup-action:hover {
+    background-color: #e55b50;
+    transform: scale(1.05);
+}
+
+.offer-popup-action:active {
+    background-color: #d04b43;
+    transform: scale(0.98);
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Scale-up animation for the pop-up */
+@keyframes scaleUp {
+    from {
+        transform: scale(0.7);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .offer-popup-content {
+        width: 85%;
+        padding: 25px;
+    }
+
+    .offer-popup-content h3 {
+        font-size: 26px;
+    }
+
+    .offer-popup-content ul {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .offer-popup-content {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .offer-popup-content h3 {
+        font-size: 24px;
+    }
+
+    .offer-popup-content ul {
+        font-size: 16px;
+    }
+}
+
+.timer {
+    font-size: 2rem; /* Increased font size for better visibility */
+    color: red;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.timer-box {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 0 5px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    font-size: 2.5rem; /* Larger font size for individual time units */
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.timer-label {
+    font-size: 1rem;
+    font-weight: normal;
+    color: #333;
+}
+
+.timer-separator {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+/* Increased font size for offer-product-name and offer-price */
+.offer-product-name {
+    font-size: 2rem; /* Larger font size for product name */
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.offer-price {
+    font-size: 1.5rem; /* Smaller font size for price */
+    font-weight:lighter;
+    margin-bottom: 10px;
+    text-align: center;
+}

@@ -1,170 +1,136 @@
-// import React, { useContext, useState } from 'react'
-// import './Navbar.css'
-// import logo from '../Assets/logo.png'
-// import cart_icon from '../Assets/cart_icon.png'
-// import { Link } from 'react-router-dom'
-// import { useNavigate } from "react-router-dom";
-// import { ShopContext } from '../../context/ShopContext'
-
-// const Navbar = () => {
-
-//     const [menu,setMenu] = useState("shop")
-//     const {getTotalCartItems} = useContext(ShopContext);
-//     const navigate = useNavigate();
-
-//   const handleLoginClick = () => {
-//     navigate("/signup"); // Navigate to the Sign-Up page
-//   };
-//   return (
-//     <div className='navbar'>
-//         <div className='nav-logo'>
-//             <img src={logo} alt=''/>
-//             <p>SILKSEW</p>
-//         </div>
-//         <ul className='nav-menu'>
-//             <li onClick={()=>{setMenu("shop")}}><Link style={{textDecoration: 'none'}} to='/'>Shop</Link>{menu === "shop"?<hr/>:<></>}</li>
-//             <li onClick={()=>{setMenu("mens")}}><Link style={{textDecoration: 'none'}} to='/mens'>Men</Link> {menu === "mens"?<hr/>:<></>}</li>
-//             <li onClick={()=>{setMenu("womens")}}><Link style={{textDecoration: 'none'}} to='/womens'>Women</Link> {menu === "womens"?<hr/>:<></>}</li>
-//             <li onClick={()=>{setMenu("kids")}}><Link style={{textDecoration: 'none'}} to='/kids'>Kids</Link> {menu === "kids"?<hr/>:<></>}</li>
-//         </ul>
-//         <div className='nav-login-cart'>
-//             {/* <Link to='/login'><button>Login</button></Link> */}
-//             <button onClick={handleLoginClick} className="login-btn">
-//         Login
-//       </button>
-//             <Link to='/cart'><img src={cart_icon} alt=''/></Link>
-//             <div className='nav-cart-count'>{getTotalCartItems()}</div>
-//         </div> 
-//     </div>
-//   )
-// }
-
-// export default Navbar
-
-import React, { useState,useRef } from "react";
-import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import "./Navbar.css";
 import logo from "../Assets/logo.png";
 import cart_icon from "../Assets/cart_icon.png";
-import { useContext } from "react";
+import profile_icon from "../Assets/profile_icon.png";
+import { Link, useNavigate } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
 
 const Navbar = () => {
-  const { getTotalCartItems } = useContext(ShopContext); // Get cart items count
-  const [position, setPosition] = useState({ left: 0, width: 0, opacity: 0 });
+  const [menu, setMenu] = useState("shop");
+  const { getTotalCartItems } = useContext(ShopContext); // Get the total number of items in the cart
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [userFullName, setUserFullName] = useState(""); // Added state for full name
 
-  const handleLoginClick = () => {
+  // Function to update login state, wrapped with useCallback to optimize performance
+  const updateLoginState = useCallback(() => {
+    const loggedInUser = JSON.parse(localStorage.getItem("user"));
+    if (loggedInUser) {
+      setIsLoggedIn(true);
+      setUserName(loggedInUser.name);
+      setUserFullName(loggedInUser.fullName || ""); // Save full name if available
+    } else {
+      setIsLoggedIn(false);
+      setUserName("");
+      setUserFullName("");
+    }
+  }, []);
+
+  useEffect(() => {
+    updateLoginState(); // Initial check for logged-in user
+
+    // Event listener to handle login/logout dynamically
+    const handleAuthEvent = () => {
+      updateLoginState();
+    };
+
+    // Listen for "authChange" event
+    window.addEventListener("authChange", handleAuthEvent);
+
+    // Listen for storage changes (to detect login/logout in other tabs)
+    const handleStorageChange = (e) => {
+      if (e.key === "user") {
+        updateLoginState();
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      // Cleanup event listeners on component unmount
+      window.removeEventListener("authChange", handleAuthEvent);
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [updateLoginState]);
+
+  const handleLogoutClick = () => {
+    // Clear user data and update state
+    localStorage.removeItem("user");
+
+    // Dispatch "authChange" event
+    const event = new Event("authChange");
+    window.dispatchEvent(event);
+
+    // Trigger a storage event to notify other tabs of the logout
+    localStorage.setItem("user", JSON.stringify(null)); // This will trigger the storage event in other tabs
+
+    // Redirect to signup page after logout
     navigate("/signup");
   };
 
   return (
-    <motion.nav
-      initial={{ y: -80 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 150, damping: 20 }}
-      className="navbar"
-    >
+    <div className="navbar">
       <div className="nav-logo">
-        <motion.img
-          src={logo}
-          alt="Logo"
-          className="logo"
-          initial={{ rotate: 0 }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.5, ease: "easeInOut" }}
-        />
+        <img src={logo} alt="Logo" />
         <p>SILKSEW</p>
       </div>
-
-      <ul
-        className="nav-menu relative"
-        onMouseLeave={() => setPosition({ ...position, opacity: 0 })}
-      >
-        <Tab setPosition={setPosition} link="/">
-          Home
-        </Tab>
-        <Tab setPosition={setPosition} link="/mens">
-          Men
-        </Tab>
-        <Tab setPosition={setPosition} link="/womens">
-          Women
-        </Tab>
-        <Tab setPosition={setPosition} link="/kids">
-          Kids
-        </Tab>
-        <Cursor position={position} />
+      <ul className="nav-menu">
+        <li onClick={() => setMenu("shop")}>
+          <Link style={{ textDecoration: "none" }} to="/">
+            Shop
+          </Link>
+          {menu === "shop" && <hr />}
+        </li>
+        <li onClick={() => setMenu("mens")}>
+          <Link style={{ textDecoration: "none" }} to="/mens">
+            Men
+          </Link>
+          {menu === "mens" && <hr />}
+        </li>
+        <li onClick={() => setMenu("womens")}>
+          <Link style={{ textDecoration: "none" }} to="/womens">
+            Women
+          </Link>
+          {menu === "womens" && <hr />}
+        </li>
+        <li onClick={() => setMenu("kids")}>
+          <Link style={{ textDecoration: "none" }} to="/kids">
+            Kids
+          </Link>
+          {menu === "kids" && <hr />}
+        </li>
       </ul>
-
       <div className="nav-login-cart">
-        <motion.button
-          whileHover={{
-            backgroundColor: "#38bdf8", // Light Blue
-            scale: 1.15,
-            boxShadow: "0px 4px 15px rgba(56, 189, 248, 0.5)",
-          }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleLoginClick}
-          className="login-btn"
-        >
-          Login
-        </motion.button>
-        <Link to="/cart">
-          <motion.img
-            src={cart_icon}
-            alt="Cart Icon"
-            whileHover={{ rotate: 20 }}
-            className="cart-icon"
-          />
-        </Link>
-        <div className="nav-cart-count">{getTotalCartItems()}</div>
+        {isLoggedIn && (
+          <Link to="/cart" className="cart-icon-wrapper">
+            <img src={cart_icon} alt="Cart" className="cart-icon" />
+            {/* Display the cart item count if it's greater than 0 */}
+            {getTotalCartItems() > 0 && (
+              <div className="cart-item-count">{getTotalCartItems()}</div>
+            )}
+          </Link>
+        )}
+        {isLoggedIn ? (
+          <div className="profile-info">
+            <Link to="/profile" className="profile-link">
+              <img src={profile_icon} alt="Profile" className="profile-icon" />
+            </Link>
+            <span className="user-name">
+              Hi, {userName}{userFullName && ` (${userFullName})`}
+            </span>
+            <button onClick={handleLogoutClick} className="login-btn">
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button onClick={() => navigate("/signup")} className="login-btn">
+            Login
+          </button>
+        )}
       </div>
-    </motion.nav>
-  );
-};
-
-const Tab = ({ children, setPosition, link }) => {
-  const ref = useRef(null);
-
-  return (
-    <motion.li
-      ref={ref}
-      onMouseEnter={() => {
-        if (!ref?.current) return;
-        const { width } = ref.current.getBoundingClientRect();
-        setPosition({
-          left: ref.current.offsetLeft,
-          width,
-          opacity: 1,
-        });
-      }}
-      className="tab"
-      whileHover={{ scale: 1.1 }}
-    >
-      <Link to={link} className="tab-link">
-        {children}
-      </Link>
-    </motion.li>
-  );
-};
-
-const Cursor = ({ position }) => {
-  return (
-    <motion.div
-      animate={{
-        ...position,
-      }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="cursor"
-    />
+    </div>
   );
 };
 
 export default Navbar;
-
-
-
-
-
-

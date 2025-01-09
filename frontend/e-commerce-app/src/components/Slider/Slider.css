@@ -1,0 +1,92 @@
+/* Slider container */
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 500px; /* Set the height of the slider */
+    overflow: hidden;
+  }
+  
+  .slick-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .slick-prev,
+  .slick-next {
+    color: white;
+    font-size: 30px;
+    z-index: 2;
+  }
+  
+  .slick-prev {
+    left: 10px;
+    z-index: 2;
+  }
+  
+  .slick-next {
+    right: 10px;
+  }
+  
+  .slick-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .slick-dots li button {
+    background-color: white;
+  }
+  
+  .slick-dots li.slick-active button {
+    background-color: #ff6347; /* Active dot color */
+  }
+  
+  /* Slide content styling */
+  .slide-content {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    color: white;
+    text-align: left;
+    animation: slideUp 1s ease-in-out;
+  }
+  
+  .slide-content h2 {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .slide-content p {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  
+  .btn-shop-now {
+    padding: 12px 30px;
+    font-size: 16px;
+    background-color: #ff6347;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-shop-now:hover {
+    background-color: #ff4500;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
