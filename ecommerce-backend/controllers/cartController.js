@@ -1,5 +1,6 @@
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
+const User = require('../models/User'); // Import the User model
 const mongoose = require('mongoose');
 
 // Add item to cart
@@ -19,10 +20,18 @@ const addItemToCart = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
+    // Find the user to get the userName
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     // Find or create cart
     let cart = await Cart.findOne({ user: userId });
     if (!cart) {
-      cart = new Cart({ user: userId, items: [] });
+      cart = new Cart({ user: userId, userName: user.name, items: [] });
+    } else {
+      cart.userName = user.name; // Update userName in case it changed
     }
 
     // Check if the product already exists in the cart
