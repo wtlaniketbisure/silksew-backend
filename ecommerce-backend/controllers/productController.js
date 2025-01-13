@@ -1,75 +1,138 @@
+// controllers/productController.js
 const Product = require('../models/Product');
-
-// Create a new product
-const createProduct = async (req, res) => {
-  try {
-    const { name, description, price, category, availableStock, images } = req.body;
-
-    // Validate required fields
-    if (!name || !description || !price || !category || !availableStock || !images || images.length === 0) {
-      return res.status(400).json({ message: 'All required fields must be provided, including at least one image.' });
-    }
-
-    // Validate category options
-    const validCategories = ['mens', 'women', 'childs'];
-    const invalidCategories = category.filter(cat => !validCategories.includes(cat));
-    if (invalidCategories.length > 0) {
-      return res.status(400).json({ message: `Invalid category options: ${invalidCategories.join(', ')}` });
-    }
-
-    const product = new Product(req.body);
-    await product.save();
-    res.status(201).json(product);
-  } catch (error) {
-    res.status(500).json({ message: 'Error creating product', error: error.message });
-  }
-};
 
 // Get all products
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
-    res.status(200).json(products);
+    const products = await Product.find();
+    res.json({
+      success: true,
+      count: products.length,
+      products
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching products', error: error.message });
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching products',
+      error: error.message
+    });
   }
 };
 
-// Get product by ID
+// Get single product
 const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ message: 'Product not found' });
-    res.status(200).json(product);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found'
+      });
+    }
+    res.json({
+      success: true,
+      product
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching product', error: error.message });
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching product',
+      error: error.message
+    });
+  }
+};
+
+// Create new product
+const createProduct = async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      price,
+      oldPrice,
+      category,
+      availableStock,
+      images
+    } = req.body;
+
+    // Convert category to array if it's a string
+    let processedCategory;
+    if (typeof category === 'string') {
+      processedCategory = category.split(',').map(cat => cat.trim());
+    } else if (Array.isArray(category)) {
+      processedCategory = category;
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Category must be an array or comma-separated string'
+      });
+    }
+
+    const product = await Product.create({
+      name,
+      description,
+      price,
+      oldPrice,
+      category: processedCategory,
+      availableStock,
+      images: Array.isArray(images) ? images : [images]
+    });
+
+    res.status(201).json({
+      success: true,
+      product
+    });
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+    res.status(500).json({
+      success: false,
+      message: 'Error creating product',
+      error: error.message
+    });
   }
 };
 
 // Update product
 const updateProduct = async (req, res) => {
   try {
-    const { category, images } = req.body;
+    const { id } = req.params;
+    const updateData = { ...req.body };
 
-    // Validate category options if provided
-    if (category) {
-      const validCategories = ['mens', 'women', 'childs'];
-      const invalidCategories = category.filter(cat => !validCategories.includes(cat));
-      if (invalidCategories.length > 0) {
-        return res.status(400).json({ message: `Invalid category options: ${invalidCategories.join(', ')}` });
+    // Handle category conversion if it exists in update data
+    if (updateData.category) {
+      if (typeof updateData.category === 'string') {
+        updateData.category = updateData.category.split(',').map(cat => cat.trim());
       }
     }
 
-    // Validate images if provided
-    if (images && images.length === 0) {
-      return res.status(400).json({ message: 'At least one image must be provided.' });
+    const product = await Product.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found'
+      });
     }
 
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!product) return res.status(404).json({ message: 'Product not found' });
-    res.status(200).json(product);
+    res.json({
+      success: true,
+      product
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating product', error: error.message });
+    res.status(500).json({
+      success: false,
+      message: 'Error updating product',
+      error: error.message
+    });
   }
 };
 
@@ -77,11 +140,31 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
-    if (!product) return res.status(404).json({ message: 'Product not found' });
-    res.status(200).json({ message: 'Product deleted successfully' });
+    
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Product deleted successfully'
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting product', error: error.message });
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting product',
+      error: error.message
+    });
   }
 };
 
-module.exports = { createProduct, getAllProducts, getProductById, updateProduct, deleteProduct };
+module.exports = {
+  getAllProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct
+};

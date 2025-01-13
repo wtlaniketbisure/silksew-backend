@@ -1,21 +1,24 @@
-const express = require('express');
-const { protect } = require('../middleware/authMiddleware');
-const { admin } = require('../middleware/adminMiddleware');
+const express = require("express");
+const { protect } = require("../middleware/authMiddleware");
 const {
   createOrder,
-  getOrderDetails,
-  updateOrderToPaid,
-  updateOrderToDelivered,
-} = require('../controllers/orderController');
+  getOrderById,
+  getMyOrders,
+  getAllOrders, // For admin
+} = require("../controllers/orderController");
 
 const router = express.Router();
 
-// Protected routes for users
-router.post('/', protect, createOrder); // Create an order from cart
-router.get('/:id', protect, getOrderDetails); // Get order details
+// Create a new order (protected route)
+router.post("/", protect, createOrder);
 
-// Admin route for updating order status
-router.put('/:id/pay', protect, admin, updateOrderToPaid); // Mark order as paid
-router.put('/:id/deliver', protect, admin, updateOrderToDelivered); // Mark order as delivered
+// Get order by ID (protected route)
+router.get("/:id", protect, getOrderById);
+
+// Get logged-in user's orders (protected route)
+router.get("/myorders", protect, getMyOrders);
+
+// Get all orders (admin-only route)
+router.get("/", protect, getAllOrders);
 
 module.exports = router;

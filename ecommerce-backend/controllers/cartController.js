@@ -1,6 +1,5 @@
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
-const User = require('../models/User'); // Import the User model
 const mongoose = require('mongoose');
 
 // Add item to cart
@@ -8,6 +7,7 @@ const addItemToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
     const userId = req.user._id;
+    const userName = req.user.name; // Get user name from the authenticated user
 
     // Validate productId and quantity
     if (!mongoose.Types.ObjectId.isValid(productId) || !quantity || quantity <= 0) {
@@ -20,18 +20,14 @@ const addItemToCart = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    // Find the user to get the userName
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
     // Find or create cart
     let cart = await Cart.findOne({ user: userId });
     if (!cart) {
-      cart = new Cart({ user: userId, userName: user.name, items: [] });
-    } else {
-      cart.userName = user.name; // Update userName in case it changed
+      cart = new Cart({
+        user: userId,
+        userName: userName, // Set userName when creating new cart
+        items: []
+      });
     }
 
     // Check if the product already exists in the cart
@@ -49,7 +45,7 @@ const addItemToCart = async (req, res) => {
   }
 };
 
-// Get user cart
+// Rest of the controller methods remain the same
 const getUserCart = async (req, res) => {
   try {
     const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
@@ -61,12 +57,10 @@ const getUserCart = async (req, res) => {
   }
 };
 
-// Remove item from cart
 const removeItemFromCart = async (req, res) => {
   try {
     const { productId } = req.body;
 
-    // Validate productId
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return res.status(400).json({ message: 'Invalid product ID' });
     }
@@ -83,12 +77,10 @@ const removeItemFromCart = async (req, res) => {
   }
 };
 
-// Update item quantity in cart
 const updateItemQuantity = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
 
-    // Validate productId and quantity
     if (!mongoose.Types.ObjectId.isValid(productId) || !quantity || quantity <= 0) {
       return res.status(400).json({ message: 'Invalid product ID or quantity' });
     }
@@ -109,7 +101,6 @@ const updateItemQuantity = async (req, res) => {
   }
 };
 
-// Clear user cart
 const clearCart = async (req, res) => {
   try {
     const cart = await Cart.findOneAndDelete({ user: req.user._id });

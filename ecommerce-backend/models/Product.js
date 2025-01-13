@@ -21,8 +21,14 @@ const productSchema = new mongoose.Schema({
     min: 0,
   },
   category: {
-    type: [String], // Allows an array of strings
+    type: [String],
     required: true,
+    validate: {
+      validator: function(v) {
+        return Array.isArray(v) && v.length > 0 && v.every(cat => typeof cat === 'string');
+      },
+      message: 'Categories must be a non-empty array of strings'
+    }
   },
   availableStock: {
     type: Number,
@@ -30,8 +36,14 @@ const productSchema = new mongoose.Schema({
     min: 0,
   },
   images: {
-    type: [String], // Allows an array of image URLs
+    type: [String],
     required: true,
+    validate: {
+      validator: function(v) {
+        return Array.isArray(v) && v.length > 0;
+      },
+      message: 'At least one image is required'
+    }
   },
 }, { timestamps: true });
 
