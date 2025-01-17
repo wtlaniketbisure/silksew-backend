@@ -1,5 +1,4 @@
-// controllers/productController.js
-const Product = require('../models/Product');
+const Product = require("../models/Product")
 
 // Get all products
 const getAllProducts = async (req, res) => {
@@ -140,7 +139,7 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
-    
+
     if (!product) {
       return res.status(404).json({
         success: false,
@@ -161,10 +160,38 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// Get product list (paginated)
+const getProductList = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+
+    const products = await Product.find()
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
+
+    const totalProducts = await Product.countDocuments();
+
+    res.json({
+      success: true,
+      totalProducts,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(totalProducts / limit),
+      products
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching product list',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getProductList
 };

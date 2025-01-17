@@ -20,6 +20,7 @@ const validateObjectId = (req, res, next) => {
 
 // Public routes
 router.get('/', getAllProducts); // Get all products
+router.get('/list', getAllProducts); // Display product list
 router.get('/:id', validateObjectId, getProductById); // Get product by ID
 
 // Admin-only routes (protected by auth middleware)
