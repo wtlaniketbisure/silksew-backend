@@ -9,7 +9,7 @@ const { errorHandler } = require("./middleware/errorMiddleware");
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
 const cartRoutes = require("./routes/cartRoutes");
-const orderRoutes = require("./routes/orderRoutes"); // Added order routes
+const orderRoutes = require("./routes/orderRoutes");
 
 // Load environment variables
 dotenv.config();
@@ -21,30 +21,30 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors()); // Enable Cross-Origin Resource Sharing
-app.use(express.json()); // Parse JSON request bodies
+app.use(cors());
+app.use(express.json()); // Ensure JSON request bodies are parsed
 
-// Logging middleware for development
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// API Routes
-app.use("/api/products", productRoutes); // Product-related routes
-app.use("/api/users", userRoutes); // User-related routes
-app.use("/api/cart", cartRoutes); // Cart-related routes
-app.use("/api/orders", orderRoutes); // Order-related routes (newly added)
-
-// Default route for root endpoint
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
+// Routes
+app.use("/api/products", productRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
 
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
