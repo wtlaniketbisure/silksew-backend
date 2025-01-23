@@ -4,13 +4,16 @@ const {
   createOrder,
   getOrderById,
   getMyOrders,
-  getAllOrders, // For admin
+  getAllOrders,
+  placeOrder,
+  placeOrderStripe,
+  placeOrderRazorpay,
 } = require("../controllers/orderController");
 
 const router = express.Router();
 
 // Create a new order (protected route)
-router.post("/", protect, createOrder);
+router.post("/",  createOrder);
 
 // Get order by ID (protected route)
 router.get("/:id", protect, getOrderById);
@@ -20,5 +23,10 @@ router.get("/myorders", protect, getMyOrders);
 
 // Get all orders (admin-only route)
 router.get("/", protect, getAllOrders);
+
+// Payment Features
+router.post('/place', protect, placeOrder);
+router.post('/stripe', protect, placeOrderStripe);
+router.post('/razorpay', protect, placeOrderRazorpay);
 
 module.exports = router;
