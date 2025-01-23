@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const nodemailer = require("nodemailer");
+var bcrypt = require("bcryptjs");
 
 // Register a new user
 const registerUser = async (req, res) => {
@@ -108,4 +110,107 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getUserProfile, updateUserProfile };
+
+//  email config
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "gfullstackwtl@gmail.com",
+    pass: "qdbqxqhuhjkasivp"
+  }
+})
+
+const resetPassword = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(401).json({ message: 'Email is required' });
+  }
+
+  console.log('Received email:', email); // Log email to console
+
+  try {
+    const userFind = await User.findOne({ email: email });
+
+    // token generate for reset password
+    const token = jwt.sign({ _id: userFind._id }, process.env.JWT_SECRET, {
+      expiresIn: "2m"
+    })
+
+    const setusertoken = await User.findByIdAndUpdate({ _id: userFind._id }, { verifyToken: token }, { new: true });
+
+    if (setusertoken) {
+      const mailOptions = {
+        from: "gfullstackwtl@gmail.com",
+        to: email,
+        subject: "Password Reset Request",
+        text: `Click on this link to reset your password: http://localhost:3000/forgotPassword/${userFind.id}/${setusertoken.verifyToken}`
+      }
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("error", error);
+          res.status(401).json({ status: 401, message: "email not send" });
+        } else {
+          console.log("Email sent", info.response);
+          res.status(201).json({ status: 201, message: "Email sent Successfully" });
+        }
+      })
+    }
+
+  } catch (error) {
+    res.status(401).json({ status: 401, message: "invalid user" });
+
+  }
+}
+
+// verify user for forgot password time
+
+const forgotPassword = async (req, res) => {
+  const { id, token } = req.params;
+
+  try {
+    const validUser = await User.findOne({ _id: id, verifyToken: token })
+    const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(verifyToken);
+    if (validUser && verifyToken._id) {
+      res.status(201).json({ status: 201, validUser })
+    } else {
+      res.status(401).json({ status: 401, message: "user not exist" })
+    }
+  } catch (error) {
+    res.status(401).json({ status: 401, error })
+  }
+}
+
+// change password
+
+const changePassword = async (req, res) => {
+  const { id, token } = req.params;
+
+  const { password } = req.body;
+  try {
+    const validUser = await User.findOne({ _id: id, verifyToken: token })
+    const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (validUser && verifyToken._id) {
+      const newPassword = await bcrypt.hash(password,12);
+
+      const setNewPass = await User.findByIdAndUpdate({_id:id},{password:newPassword});
+
+      setNewPass.save();
+      res.status(201).json({status:201,setNewPass})
+
+    } else {
+      res.status(401).json({ status: 401, message: "user not exist" })
+    }
+
+  } catch (error) {
+    res.status(401).json({ status: 401, error })
+  }
+}
+
+
+
+module.exports = { registerUser, loginUser, getUserProfile, updateUserProfile, changePassword, forgotPassword, resetPassword};

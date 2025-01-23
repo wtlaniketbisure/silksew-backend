@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer'); // To handle file uploads
 const {
   createProduct,
   getAllProducts,
@@ -18,14 +19,37 @@ const validateObjectId = (req, res, next) => {
   next();
 };
 
+// Setup Multer for file handling
+const storage = multer.memoryStorage(); // Store files in memory before uploading to GridFS
+const upload = multer({ storage: storage });
+
 // Public routes
 router.get('/', getAllProducts); // Get all products
 router.get('/list', getAllProducts); // Display product list
 router.get('/:id', validateObjectId, getProductById); // Get product by ID
 
 // Admin-only routes (protected by auth middleware)
-router.post('/', protect, isAdmin, createProduct); // Create a new product
-router.put('/:id', protect, isAdmin, validateObjectId, updateProduct); // Update a product
-router.delete('/:id', protect, isAdmin, validateObjectId, deleteProduct); // Delete a product
+router.post(
+  '/',
+  protect,
+  isAdmin,
+  upload.array('images', 5), // Allow multiple images, limit to 5 files
+  createProduct
+); // Create a new product with image uploads
+
+router.put(
+  '/:id',
+  protect,
+  isAdmin,
+  validateObjectId,
+  updateProduct
+); // Update a product
+router.delete(
+  '/:id',
+  protect,
+  isAdmin,
+  validateObjectId,
+  deleteProduct
+); // Delete a product
 
 module.exports = router;
