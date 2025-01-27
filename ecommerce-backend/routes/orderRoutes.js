@@ -18,7 +18,7 @@ const router = express.Router();
 router.post("/",  createOrder);
 
 // Get order by ID (protected route)
-router.get("/:id", protect, getOrderById);
+// router.get("/:id", protect, getOrderById);
 
 // Get logged-in user's orders (protected route)
 router.get("/myorders", protect, getMyOrders);

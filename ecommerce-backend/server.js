@@ -16,8 +16,8 @@ const resetPasswordRoutes = require('./routes/userRoutes');
 const forgotPasswordRoutes = require('./routes/userRoutes'); 
 const changePasswordRoutes = require('./routes/userRoutes'); 
 
-const updateOrderStatus = require('./routes/orderRoutes');
-const updatePaymentStatus = require('./routes/orderRoutes')
+const updatePaymentStatus = require('./routes/orderRoutes'); 
+const  updateOrderStatus  = require('./routes/orderRoutes');
 
 
 // const productRoutes = require("./routes/productRoutes");
