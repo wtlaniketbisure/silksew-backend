@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../models/User"); // Assuming you have a User model
 
 // Middleware to protect routes by verifying JWT token
 const protect = async (req, res, next) => {
@@ -31,8 +31,8 @@ const protect = async (req, res, next) => {
   }
 };
 
-// Middleware to check if user is an admin
-const isAdmin = (req, res, next) => {
+// Middleware to check if the user is an admin
+const isAdmin = async (req, res, next) => {
   // Ensure the user is authenticated and has the "admin" role
   if (req.user && req.user.role === "admin") {
     next(); // User is an admin, proceed to the next handler
@@ -41,4 +41,32 @@ const isAdmin = (req, res, next) => {
   }
 };
 
-module.exports = { protect, isAdmin };
+// Middleware to authenticate admin using the provided token
+const adminAuthMiddleware = async (req, res, next) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    
+    if (!token) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ 
+      _id: decoded._id, 
+      'tokens.token': token,
+      isAdmin: true 
+    });
+
+    if (!user) {
+      throw new Error();
+    }
+
+    req.token = token;
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: 'Please authenticate as an admin' });
+  }
+};
+
+module.exports = { protect, isAdmin, adminAuthMiddleware };

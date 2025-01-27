@@ -7,6 +7,7 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
+  getProductList,
 } = require('../controllers/productController');
 const { protect, isAdmin } = require('../middleware/authMiddleware');
 
@@ -25,7 +26,7 @@ const upload = multer({ storage: storage });
 
 // Public routes
 router.get('/', getAllProducts); // Get all products
-router.get('/list', getAllProducts); // Display product list
+router.get('/list', getProductList); // Display paginated product list
 router.get('/:id', validateObjectId, getProductById); // Get product by ID
 
 // Admin-only routes (protected by auth middleware)
@@ -42,8 +43,10 @@ router.put(
   protect,
   isAdmin,
   validateObjectId,
+  upload.array('images', 5), // Allow updating images if needed
   updateProduct
 ); // Update a product
+
 router.delete(
   '/:id',
   protect,

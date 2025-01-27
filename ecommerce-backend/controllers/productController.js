@@ -50,22 +50,26 @@ const createProduct = async (req, res) => {
       price,
       oldPrice,
       category,
+      subcategory,
       availableStock,
       images,
       availableSizes,
       availableColors,
     } = req.body;
 
-    // Convert category to array if it's a string
-    let processedCategory;
-    if (typeof category === "string") {
-      processedCategory = category.split(",").map((cat) => cat.trim());
-    } else if (Array.isArray(category)) {
-      processedCategory = category;
-    } else {
+    // Convert category and subcategory to arrays if they are strings
+    const processedCategory = typeof category === "string" 
+      ? category.split(",").map((cat) => cat.trim()) 
+      : Array.isArray(category) ? category : [];
+
+    const processedSubcategory = typeof subcategory === "string" 
+      ? subcategory.split(",").map((sub) => sub.trim()) 
+      : Array.isArray(subcategory) ? subcategory : [];
+
+    if (!processedCategory.length || !processedSubcategory.length) {
       return res.status(400).json({
         success: false,
-        message: "Category must be an array or comma-separated string",
+        message: "Category and subcategory must be non-empty arrays or comma-separated strings",
       });
     }
 
@@ -75,6 +79,7 @@ const createProduct = async (req, res) => {
       price,
       oldPrice,
       category: processedCategory,
+      subcategory: processedSubcategory,
       availableStock,
       images: Array.isArray(images) ? images : [images],
       availableSizes,
@@ -106,13 +111,17 @@ const updateProduct = async (req, res) => {
     const { id } = req.params;
     const updateData = { ...req.body };
 
-    // Handle category conversion if it exists in update data
+    // Handle category and subcategory conversion if they exist in update data
     if (updateData.category) {
-      if (typeof updateData.category === "string") {
-        updateData.category = updateData.category
-          .split(",")
-          .map((cat) => cat.trim());
-      }
+      updateData.category = typeof updateData.category === "string"
+        ? updateData.category.split(",").map((cat) => cat.trim())
+        : updateData.category;
+    }
+
+    if (updateData.subcategory) {
+      updateData.subcategory = typeof updateData.subcategory === "string"
+        ? updateData.subcategory.split(",").map((sub) => sub.trim())
+        : updateData.subcategory;
     }
 
     // Handle availableSizes and availableColors

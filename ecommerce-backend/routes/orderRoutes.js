@@ -8,6 +8,8 @@ const {
   placeOrder,
   placeOrderStripe,
   placeOrderRazorpay,
+  updateOrderStatus,
+  updatePaymentStatus
 } = require("../controllers/orderController");
 
 const router = express.Router();
@@ -28,5 +30,8 @@ router.get("/", protect, getAllOrders);
 router.post('/place', protect, placeOrder);
 router.post('/stripe', protect, placeOrderStripe);
 router.post('/razorpay', protect, placeOrderRazorpay);
+
+router.post('/order-status', updateOrderStatus);
+router.post('/payment-status', updatePaymentStatus);
 
 module.exports = router;

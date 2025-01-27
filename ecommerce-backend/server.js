@@ -15,6 +15,11 @@ const orderRoutes = require('./routes/orderRoutes'); // Added order routes
 const resetPasswordRoutes = require('./routes/userRoutes'); 
 const forgotPasswordRoutes = require('./routes/userRoutes'); 
 const changePasswordRoutes = require('./routes/userRoutes'); 
+
+const updateOrderStatus = require('./routes/orderRoutes');
+const updatePaymentStatus = require('./routes/orderRoutes')
+
+
 // const productRoutes = require("./routes/productRoutes");
 // const userRoutes = require("./routes/userRoutes");
 // const cartRoutes = require("./routes/cartRoutes");
@@ -49,6 +54,10 @@ app.use('/api/upload', uploadRoute); // Image upload route for Cloudinary
 app.use('/api/reset-password', resetPasswordRoutes); 
 app.use('/api/forgot-password', forgotPasswordRoutes); 
 app.use('/api/change-password', changePasswordRoutes); 
+
+app.use('/api/updateOrderStatus',  updateOrderStatus);
+app.use('/api/updatePayment',  updatePaymentStatus);
+
 
 // Default route for root endpoint
 app.get('/', (req, res) => {

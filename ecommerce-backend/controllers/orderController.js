@@ -93,4 +93,34 @@ const placeOrderRazorpay = async (req, res) => {
   res.status(501).json({ message: "Razorpay payment not implemented yet" });
 };
 
-module.exports = { createOrder, getOrderById, getMyOrders, getAllOrders, placeOrder, placeOrderStripe, placeOrderRazorpay };
+const updateOrderStatus = async (req, res) =>{
+
+  try {
+      
+      const {_id, status} = req.body
+
+      await Order.findByIdAndUpdate(_id, {status})
+      res.json({success:true, message:'Status Updated'})
+
+  } catch (error) {
+      console.log(error)
+      res.json({success:false, message:error.message})
+  }
+}
+
+const updatePaymentStatus = async (req, res) =>{
+
+  try {
+      
+      const {_id, payment} = req.body
+
+      await Order.findByIdAndUpdate(_id, {payment})
+      res.json({success:true, message:'Status Updated'})
+
+  } catch (error) {
+      console.log(error)
+      res.json({success:false, message:error.message})
+  }
+}
+
+module.exports = { createOrder, getOrderById, getMyOrders, getAllOrders, placeOrder, placeOrderStripe, placeOrderRazorpay ,updatePaymentStatus, updateOrderStatus};

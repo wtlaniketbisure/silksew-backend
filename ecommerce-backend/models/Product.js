@@ -30,6 +30,16 @@ const productSchema = new mongoose.Schema({
       message: 'Categories must be a non-empty array of strings',
     },
   },
+  subcategory: {
+    type: [String],
+    required: true,
+    validate: {
+      validator: function(v) {
+        return Array.isArray(v) && v.length > 0 && v.every(sub => typeof sub === 'string');
+      },
+      message: 'Subcategories must be a non-empty array of strings',
+    },
+  },
   availableStock: {
     type: Number,
     required: true,
