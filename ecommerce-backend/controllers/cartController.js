@@ -7,7 +7,9 @@ const User = require('../models/User');
 // Add item to cart
 const addItemToCart = async (req, res) => {
   try {
-    const { productId, size, quantity = 1} = req.body;
+    console.log(req.body);
+    
+    const { productId, size,color, quantity = 1} = req.body;
     const userId = req.user._id;
 
     // Validate productId and quantity
@@ -41,7 +43,7 @@ const addItemToCart = async (req, res) => {
     if (productExists) {
       productExists.quantity += quantity; // Increment quantity
     } else {
-      cart.items.push({ productId: productId, size, quantity }); // Add new item with quantity
+      cart.items.push({ productId: productId, size,color, quantity }); // Add new item with quantity
     }
 
     await cart.save();
