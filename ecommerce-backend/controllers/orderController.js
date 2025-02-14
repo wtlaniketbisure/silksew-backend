@@ -356,17 +356,70 @@ const saveReturnReason = async (req, res) => {
   }
 };
 
+// const getReturnOrder = async (req, res) => {
+//   try {
+//     // Fetch orders where returnRequested is true in items
+//     const orders = await Order.find({ "items.returnRequested": true })
+//       .populate("userId", "firstName lastName email") // Populating userId with firstName, lastName, and email
+//       .populate("items.productId", "name"); // Populating productId with name
+//     console.log("orders", orders);
+
+//     // If no orders found
+//     if (!orders.length) {
+//       return res.status(404).json({ message: "No return requests found" });
+//     }
+
+//     // Format the fetched orders
+//     const formattedOrders = orders.flatMap((order) =>
+//       order.items
+//         .filter((item) => item.returnRequested)
+//         .map((returnItem) => {
+//           const productName = returnItem.productId
+//             ? returnItem.productId.name
+//             : "Unknown Product";
+
+//           return {
+//             _id: order._id,
+//             productName: productName,
+//             productId: returnItem.productId._id,
+//             firstName: order.userId ? order.userId.firstName : "Unknown", // Accessing firstName from populated userId
+//             lastName: order.userId ? order.userId.lastName : "Unknown", // Accessing lastName from populated userId
+//             email: order.userId ? order.userId.email : "Unknown", // Accessing email from populated userId
+//             street: order.address ? order.address.street : "Unknown",
+//             landmark: order.address ? order.address.landmark : "Unknown",
+//             city: order.address ? order.address.city : "Unknown",
+//             zipcode: order.address ? order.address.zipcode : "Unknown",
+//             country: order.address ? order.address.country : "Unknown",
+//             state: order.address ? order.address.state : "Unknown",
+//             phone: order.address ? order.address.phone : "Unknown",
+//             totalAmount: order.totalAmount,
+//             paymentMethod: order.paymentMethod,
+//             returnReason: returnItem.returnReason || "N/A",
+//             status: returnItem.returnApproved
+//               ? "Return Approved"
+//               : "Return Requested",
+//           };
+//         })
+//     );
+
+//     res.status(200).json(formattedOrders);
+//   } catch (error) {
+//     console.error("Error in getReturnOrder:", error);
+//     res.status(500).json({ message: "Server error", error: error.message });
+//   }
+// };
+
+
 const getReturnOrder = async (req, res) => {
   try {
     // Fetch orders where returnRequested is true in items
     const orders = await Order.find({ "items.returnRequested": true })
-      .populate("userId", "firstName lastName email") // Populating userId with firstName, lastName, and email
-      .populate("items.productId", "name"); // Populating productId with name
-    console.log("orders", orders);
+      .populate("userId", "firstName lastName email")
+      .populate("items.productId", "name")
 
     // If no orders found
     if (!orders.length) {
-      return res.status(404).json({ message: "No return requests found" });
+      return res.status(404).json({ message: "No return requests found" })
     }
 
     // Format the fetched orders
@@ -374,17 +427,15 @@ const getReturnOrder = async (req, res) => {
       order.items
         .filter((item) => item.returnRequested)
         .map((returnItem) => {
-          const productName = returnItem.productId
-            ? returnItem.productId.name
-            : "Unknown Product";
+          const productName = returnItem.productId ? returnItem.productId.name : "Unknown Product"
 
           return {
             _id: order._id,
             productName: productName,
-            productId: returnItem.productId._id,
-            firstName: order.userId ? order.userId.firstName : "Unknown", // Accessing firstName from populated userId
-            lastName: order.userId ? order.userId.lastName : "Unknown", // Accessing lastName from populated userId
-            email: order.userId ? order.userId.email : "Unknown", // Accessing email from populated userId
+            productId: returnItem.productId ? returnItem.productId._id : null,
+            firstName: order.userId ? order.userId.firstName : "Unknown",
+            lastName: order.userId ? order.userId.lastName : "Unknown",
+            email: order.userId ? order.userId.email : "Unknown",
             street: order.address ? order.address.street : "Unknown",
             landmark: order.address ? order.address.landmark : "Unknown",
             city: order.address ? order.address.city : "Unknown",
@@ -395,20 +446,17 @@ const getReturnOrder = async (req, res) => {
             totalAmount: order.totalAmount,
             paymentMethod: order.paymentMethod,
             returnReason: returnItem.returnReason || "N/A",
-            status: returnItem.returnApproved
-              ? "Return Approved"
-              : "Return Requested",
-          };
-        })
-    );
+            status: returnItem.returnApproved ? "Return Approved" : "Return Requested",
+          }
+        }),
+    )
 
-    res.status(200).json(formattedOrders);
+    res.status(200).json(formattedOrders)
   } catch (error) {
-    console.error("Error in getReturnOrder:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error in getReturnOrder:", error)
+    res.status(500).json({ message: "Server error", error: error.message })
   }
-};
-
+}
 const updateReturnStatus = async (req, res) => {
   try {
     const { orderId, productId } = req.params;
